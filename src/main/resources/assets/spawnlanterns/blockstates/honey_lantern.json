@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "spawnlanterns:block/honey_lantern"
+    },
+    "hanging=true": {
+      "model": "spawnlanterns:block/honey_lantern_hanging"
+    }
+  }
+}

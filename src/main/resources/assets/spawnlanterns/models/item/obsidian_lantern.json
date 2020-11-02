@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "spawnlanterns:item/obsidian_lantern"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "spawnlanterns",
+  "version": "${version}",
+
+  "name": "Spawn Lanterns",
+  "description": "Lanterns that alter monster spawn rates.",
+  "authors": [
+    "doctor4t"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/spawnlanterns",
+    "sources": "https://github.com/Ladysnake/Spawn-Lanterns"
+  },
+
+  "license": "CC-BY-NC-SA 4.0",
+  "icon": "assets/spawnlanterns/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "ladysnake.spawnlanterns.common.SpawnLanterns"
+    ],
+    "client": [
+      "ladysnake.spawnlanterns.client.SpawnLanternsClient"
+    ]
+  },
+  "mixins": [
+    "spawnlanterns.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.7.4",
+    "fabric": "*",
+    "minecraft": "1.16.x"
+  },
+  "suggests": {
+    "flamingo": "*"
+  }
+}
