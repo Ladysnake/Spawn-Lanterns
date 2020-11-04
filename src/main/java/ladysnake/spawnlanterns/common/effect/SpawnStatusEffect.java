@@ -1,4 +1,4 @@
-package ladysnake.spawnlanterns.effect;
+package ladysnake.spawnlanterns.common.effect;
 
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;

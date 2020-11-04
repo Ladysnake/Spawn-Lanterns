@@ -1,6 +1,10 @@
 package ladysnake.spawnlanterns.common;
 
-import ladysnake.spawnlanterns.effect.SpawnStatusEffect;
+import ladysnake.spawnlanterns.common.block.CryingLanternBlock;
+import ladysnake.spawnlanterns.common.block.SoothingLanternBlock;
+import ladysnake.spawnlanterns.common.effect.SpawnStatusEffect;
+import ladysnake.spawnlanterns.common.entity.CryingLanternBlockEntity;
+import ladysnake.spawnlanterns.common.entity.SoothingLanternBlockEntity;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -8,9 +12,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.block.Material;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.BlockSoundGroup;
@@ -28,15 +32,22 @@ public class SpawnLanterns implements ModInitializer {
     public static StatusEffect SOOTHING;
     public static StatusEffect PROVOCATION;
 
+    public static BlockEntityType<SoothingLanternBlockEntity> SOOTHING_LANTERN_BE;
+    public static BlockEntityType<CryingLanternBlockEntity> CRYING_LANTERN_BE;
+
     @Override
     public void onInitialize() {
         // register lanterns
-        SOOTHING_LANTERN = registerBlock(new LanternBlock(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.5F).sounds(BlockSoundGroup.LANTERN).lightLevel(10).nonOpaque()), "soothing_lantern", ItemGroup.DECORATIONS);
-        CRYING_LANTERN = registerBlock(new LanternBlock(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.5F).sounds(BlockSoundGroup.LANTERN).lightLevel(10).nonOpaque()), "crying_lantern", ItemGroup.DECORATIONS);
+        SOOTHING_LANTERN = registerBlock(new SoothingLanternBlock(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.5F).sounds(BlockSoundGroup.LANTERN).lightLevel(10).nonOpaque()), "soothing_lantern", ItemGroup.DECORATIONS);
+        CRYING_LANTERN = registerBlock(new CryingLanternBlock(FabricBlockSettings.of(Material.METAL).requiresTool().strength(3.5F).sounds(BlockSoundGroup.LANTERN).lightLevel(10).nonOpaque()), "crying_lantern", ItemGroup.DECORATIONS);
 
         // register status effects
         SOOTHING = registerStatusEffect(new SpawnStatusEffect(StatusEffectType.BENEFICIAL, 15747468), "soothing");
         PROVOCATION = registerStatusEffect(new SpawnStatusEffect(StatusEffectType.BENEFICIAL, 5851632), "provocation");
+
+        // register block entities
+        SOOTHING_LANTERN_BE = Registry.register(Registry.BLOCK_ENTITY_TYPE, MODID + ":" + "soothing_lantern", BlockEntityType.Builder.create(SoothingLanternBlockEntity::new, SOOTHING_LANTERN).build(null));
+        CRYING_LANTERN_BE = Registry.register(Registry.BLOCK_ENTITY_TYPE, MODID + ":" + "crying_lantern", BlockEntityType.Builder.create(CryingLanternBlockEntity::new, CRYING_LANTERN).build(null));
 
         // register usables on soul lanterns and their effects
         UseBlockCallback.EVENT.register((playerEntity, world, hand, blockHitResult) -> {
