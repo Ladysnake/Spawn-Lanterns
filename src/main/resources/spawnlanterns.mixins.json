@@ -4,6 +4,7 @@
   "package": "ladysnake.spawnlanterns.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "SpawnHelperMixin"
   ],
   "injectors": {
     "defaultRequire": 1
