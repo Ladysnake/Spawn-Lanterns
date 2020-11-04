@@ -16,7 +16,7 @@ public class SpawnLanternsClient implements ClientModInitializer {
     }
 
     public static void registerRenders() {
-        BlockRenderLayerMap.INSTANCE.putBlock(SpawnLanterns.HONEY_LANTERN, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(SpawnLanterns.OBSIDIAN_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(SpawnLanterns.SOOTHING_LANTERN, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(SpawnLanterns.CRYING_LANTERN, RenderLayer.getCutout());
     }
 }
