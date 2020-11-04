@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "spawnlanterns:item/honey_lantern"
+    "layer0": "spawnlanterns:item/soothing_lantern"
   }
 }
