@@ -4,6 +4,7 @@ import ladysnake.spawnlanterns.common.SpawnLanterns;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.Angerable;
+import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.predicate.entity.EntityPredicates;
@@ -25,6 +26,10 @@ public abstract class PlayerEntityMixin extends LivingEntity {
             this.getEntityWorld().getEntitiesByClass(LivingEntity.class, this.getBoundingBox().expand(32.0D), EntityPredicates.VALID_LIVING_ENTITY).forEach(entity -> {
                 if (entity instanceof Angerable) {
                     ((Angerable) entity).setAngryAt(this.getUuid());
+                    ((Angerable) entity).setTarget(this);
+                }
+                if (entity instanceof HostileEntity) {
+                    ((HostileEntity) entity).setTarget(this);
                 }
             });
         }
