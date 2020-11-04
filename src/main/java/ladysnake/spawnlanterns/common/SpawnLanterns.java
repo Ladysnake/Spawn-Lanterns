@@ -6,6 +6,7 @@ import ladysnake.spawnlanterns.common.effect.SpawnStatusEffect;
 import ladysnake.spawnlanterns.common.entity.CryingLanternBlockEntity;
 import ladysnake.spawnlanterns.common.entity.SoothingLanternBlockEntity;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.Block;
@@ -13,15 +14,36 @@ import net.minecraft.block.Blocks;
 import net.minecraft.block.LanternBlock;
 import net.minecraft.block.Material;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectType;
+import net.minecraft.entity.mob.HostileEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.collection.WeightedPicker;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.Heightmap;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.SpawnSettings;
+import net.minecraft.world.chunk.WorldChunk;
+import net.minecraft.world.gen.StructureAccessor;
+import net.minecraft.world.gen.chunk.ChunkGenerator;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import static java.util.logging.Level.CONFIG;
 
 public class SpawnLanterns implements ModInitializer {
     public static final String MODID = "spawnlanterns";
@@ -129,6 +151,53 @@ public class SpawnLanterns implements ModInitializer {
             }
             return ActionResult.PASS;
         });
+
+        // provocation spawn tick
+        ServerTickEvents.END_SERVER_TICK.register(server -> {
+            server.getWorlds().forEach(world -> {
+                if (world.random.nextInt(500) == 0) {
+                    getLoadedChunks(world).forEach(chunk -> {
+                        ChunkPos pos = chunk.getPos();
+                        if (world.getEntitiesByClass(HostileEntity.class, new Box(pos.getStartPos(), pos.getStartPos().add(16, 256, 16)), e -> true).size() < 3) {
+                            int randomX = world.random.nextInt(16);
+                            int randomZ = world.random.nextInt(16);
+                            ChunkPos chunkPos = chunk.getPos();
+
+                            int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, chunkPos.getStartX() + randomX, chunkPos.getStartZ() + randomZ);
+                            BlockPos spawnPos = new BlockPos(chunkPos.getStartX() + randomX, y, chunkPos.getStartZ() + randomZ);
+
+                            PlayerEntity closestPlayer = world.getClosestPlayer(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 999999, false);
+                            if (closestPlayer != null && closestPlayer.hasStatusEffect(SpawnLanterns.PROVOCATION)) {
+                                SpawnSettings.SpawnEntry spawnEntry = pickRandomSpawnEntry(
+                                        world.getChunkManager().getChunkGenerator(),
+                                        SpawnGroup.MONSTER,
+                                        world.getRandom(),
+                                        spawnPos,
+                                        world.getStructureAccessor(),
+                                        world.getBiome(spawnPos)
+                                );
+
+                                if (spawnEntry != null) {
+                                    Entity entity = spawnEntry.type.create(world);
+
+                                    if (entity != null) {
+                                        entity.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                                        entity.updateTrackedPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                                        entity.updatePosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                                        world.spawnEntity(entity);
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    private static SpawnSettings.SpawnEntry pickRandomSpawnEntry(ChunkGenerator chunkGenerator, SpawnGroup spawnGroup, Random random, BlockPos pos, StructureAccessor accessor, Biome biome) {
+        List<SpawnSettings.SpawnEntry> list = chunkGenerator.getEntitySpawnList(biome, accessor, spawnGroup, pos);
+        return list.isEmpty() ? null : WeightedPicker.getRandom(random, list);
     }
 
     private static Block registerBlock(Block block, String name, ItemGroup itemGroup) {
@@ -155,4 +224,30 @@ public class SpawnLanterns implements ModInitializer {
         return statusEffect;
     }
 
+    public static List<WorldChunk> getLoadedChunks(ServerWorld world) {
+        ArrayList<WorldChunk> loadedChunks = new ArrayList<>();
+        int renderDistance = world.getServer().getPlayerManager().getViewDistance();
+
+        world.getPlayers().forEach(player -> {
+            ChunkPos playerChunkPos = new ChunkPos(player.getBlockPos());
+            WorldChunk chunk = world.getChunk(playerChunkPos.x, playerChunkPos.z);
+
+            if(!loadedChunks.contains(chunk)) {
+                loadedChunks.add(chunk);
+            }
+
+            for(int x = -renderDistance; x <= renderDistance; x++) {
+                for(int z = -renderDistance; z <= renderDistance; z++) {
+                    ChunkPos offsetChunkPos = new ChunkPos(playerChunkPos.x + x, playerChunkPos.z + z);
+                    WorldChunk offsetChunk = world.getChunk(offsetChunkPos.x, offsetChunkPos.z);
+
+                    if(!loadedChunks.contains(offsetChunk)) {
+                        loadedChunks.add(offsetChunk);
+                    }
+                }
+            }
+        });
+
+        return loadedChunks;
+    }
 }
