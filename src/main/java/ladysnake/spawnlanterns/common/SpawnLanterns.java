@@ -195,11 +195,6 @@ public class SpawnLanterns implements ModInitializer {
         });
     }
 
-    private static SpawnSettings.SpawnEntry pickRandomSpawnEntry(ChunkGenerator chunkGenerator, SpawnGroup spawnGroup, Random random, BlockPos pos, StructureAccessor accessor, Biome biome) {
-        List<SpawnSettings.SpawnEntry> list = chunkGenerator.getEntitySpawnList(biome, accessor, spawnGroup, pos);
-        return list.isEmpty() ? null : WeightedPicker.getRandom(random, list);
-    }
-
     private static Block registerBlock(Block block, String name, ItemGroup itemGroup) {
         Registry.register(Registry.BLOCK, MODID + ":" + name, block);
 
@@ -224,6 +219,7 @@ public class SpawnLanterns implements ModInitializer {
         return statusEffect;
     }
 
+    // utils
     public static List<WorldChunk> getLoadedChunks(ServerWorld world) {
         ArrayList<WorldChunk> loadedChunks = new ArrayList<>();
         int renderDistance = world.getServer().getPlayerManager().getViewDistance();
@@ -249,5 +245,10 @@ public class SpawnLanterns implements ModInitializer {
         });
 
         return loadedChunks;
+    }
+
+    private static SpawnSettings.SpawnEntry pickRandomSpawnEntry(ChunkGenerator chunkGenerator, SpawnGroup spawnGroup, Random random, BlockPos pos, StructureAccessor accessor, Biome biome) {
+        List<SpawnSettings.SpawnEntry> list = chunkGenerator.getEntitySpawnList(biome, accessor, spawnGroup, pos);
+        return list.isEmpty() ? null : WeightedPicker.getRandom(random, list);
     }
 }
