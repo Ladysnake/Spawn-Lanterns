@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "Spawn Lanterns",
-  "description": "Lanterns that alter monster spawn rates.",
+  "description": "Lanterns that alter hostile mobs spawn rates.",
   "authors": [
     "doctor4t"
   ],
