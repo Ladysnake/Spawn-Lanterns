@@ -151,48 +151,6 @@ public class SpawnLanterns implements ModInitializer {
             }
             return ActionResult.PASS;
         });
-
-        // provocation spawn tick
-        ServerTickEvents.END_SERVER_TICK.register(server -> {
-            server.getWorlds().forEach(world -> {
-                if (world.random.nextInt(500) == 0) {
-                    getLoadedChunks(world).forEach(chunk -> {
-                        ChunkPos pos = chunk.getPos();
-                        if (world.getEntitiesByClass(HostileEntity.class, new Box(pos.getStartPos(), pos.getStartPos().add(16, 256, 16)), e -> true).size() < 3) {
-                            int randomX = world.random.nextInt(16);
-                            int randomZ = world.random.nextInt(16);
-                            ChunkPos chunkPos = chunk.getPos();
-
-                            int y = world.getTopY(Heightmap.Type.MOTION_BLOCKING, chunkPos.getStartX() + randomX, chunkPos.getStartZ() + randomZ);
-                            BlockPos spawnPos = new BlockPos(chunkPos.getStartX() + randomX, y, chunkPos.getStartZ() + randomZ);
-
-                            PlayerEntity closestPlayer = world.getClosestPlayer(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ(), 999999, false);
-                            if (closestPlayer != null && closestPlayer.hasStatusEffect(SpawnLanterns.PROVOCATION)) {
-                                SpawnSettings.SpawnEntry spawnEntry = pickRandomSpawnEntry(
-                                        world.getChunkManager().getChunkGenerator(),
-                                        SpawnGroup.MONSTER,
-                                        world.getRandom(),
-                                        spawnPos,
-                                        world.getStructureAccessor(),
-                                        world.getBiome(spawnPos)
-                                );
-
-                                if (spawnEntry != null) {
-                                    Entity entity = spawnEntry.type.create(world);
-
-                                    if (entity != null) {
-                                        entity.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-                                        entity.updateTrackedPosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-                                        entity.updatePosition(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
-                                        world.spawnEntity(entity);
-                                    }
-                                }
-                            }
-                        }
-                    });
-                }
-            });
-        });
     }
 
     private static Block registerBlock(Block block, String name, ItemGroup itemGroup) {

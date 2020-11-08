@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "SpawnHelperMixin",
-    "PlayerEntityMixin"
+    "PlayerEntityMixin",
+    "InfoMixin",
+    "SpawnHelperAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
