@@ -23,7 +23,7 @@ public class CryingLanternBlockEntity extends BlockEntity implements Tickable {
     @Override
     public void tick() {
         if (this.world != null && !this.world.isClient) {
-            int j = 16;
+            int j = 20;
             int k = this.pos.getX();
             int l = this.pos.getY();
             int m = this.pos.getZ();
