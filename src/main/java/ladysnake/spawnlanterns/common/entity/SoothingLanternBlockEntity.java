@@ -26,7 +26,7 @@ public class SoothingLanternBlockEntity extends BlockEntity implements Tickable 
             List<PlayerEntity> list = this.world.getNonSpectatingEntities(PlayerEntity.class, box);
             list.forEach(playerEntity -> {
                 if (this.pos.isWithinDistance(playerEntity.getBlockPos(), (double) j)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(SpawnLanterns.SOOTHING, 60, 0, true, false, false));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(SpawnLanterns.SOOTHING, 110, 0, true, false, false));
                 }
             });
         }

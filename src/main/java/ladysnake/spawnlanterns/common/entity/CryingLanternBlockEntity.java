@@ -31,7 +31,7 @@ public class CryingLanternBlockEntity extends BlockEntity implements Tickable {
             List<PlayerEntity> list = this.world.getNonSpectatingEntities(PlayerEntity.class, box);
             list.forEach(playerEntity -> {
                 if (this.pos.isWithinDistance(playerEntity.getBlockPos(), (double) j)) {
-                    playerEntity.addStatusEffect(new StatusEffectInstance(SpawnLanterns.PROVOCATION, 60, 0, true, false, false));
+                    playerEntity.addStatusEffect(new StatusEffectInstance(SpawnLanterns.PROVOCATION, 110, 0, true, false, false));
                 }
             });
         }
