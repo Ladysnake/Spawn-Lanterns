@@ -4,7 +4,7 @@
 
 ## Lantern conversion
 
-Soul anterns can be converted into spawn lanterns depending on the ingredient used.
+Soul lanterns can be converted into spawn lanterns depending on the ingredient used.
 
 ### Soothing Lantern
 
