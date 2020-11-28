@@ -1,6 +1,6 @@
 # Spawn Lanterns - Changelog:
 
-### Spawn Lanterns 1.1 - 1.16.4
+### Spawn Lanterns 1.0.1 - 1.16.4
 - Fixed an issue that would cause a server to crash when starting with the mod
 
 ### Spawn Lanterns 1.0 - 1.16.4
