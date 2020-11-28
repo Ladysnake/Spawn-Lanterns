@@ -16,11 +16,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SpawnHelper.Info.class)
 public abstract class InfoMixin implements ExtendedSpawnInfo {
-    @Shadow
-    public abstract int getSpawningChunkCount();
     @Shadow @Final
     Object2IntOpenHashMap<SpawnGroup> groupToCount;
 
+    @Shadow @Final private int spawningChunkCount;
     private PlayerEntity closestPlayer;
 
     @Override
@@ -31,7 +30,7 @@ public abstract class InfoMixin implements ExtendedSpawnInfo {
     @Inject(method = "isBelowCap", at = @At("RETURN"), cancellable = true)
     private void isBelowCap(SpawnGroup group, CallbackInfoReturnable<Boolean> ci) {
         if (!ci.getReturnValueZ() && (closestPlayer != null && closestPlayer.hasStatusEffect(SpawnLanterns.PROVOCATION))) {
-            int i = group.getCapacity() * this.getSpawningChunkCount() / SpawnHelperAccessor.getChunkArea();
+            int i = group.getCapacity() * this.spawningChunkCount / SpawnHelperAccessor.getChunkArea();
             ci.setReturnValue(this.groupToCount.getInt(group) < (i * 2));
         }
     }
