@@ -10,13 +10,13 @@ import net.minecraft.client.render.RenderLayer;
 @Environment(EnvType.CLIENT)
 public class SpawnLanternsClient implements ClientModInitializer {
 
-    @Override
-    public void onInitializeClient() {
-        registerRenders();
-    }
-
     public static void registerRenders() {
         BlockRenderLayerMap.INSTANCE.putBlock(SpawnLanterns.SOOTHING_LANTERN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(SpawnLanterns.CRYING_LANTERN, RenderLayer.getCutout());
+    }
+
+    @Override
+    public void onInitializeClient() {
+        registerRenders();
     }
 }

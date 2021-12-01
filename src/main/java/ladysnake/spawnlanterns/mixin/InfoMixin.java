@@ -16,10 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SpawnHelper.Info.class)
 public abstract class InfoMixin implements ExtendedSpawnInfo {
-    @Shadow @Final
+    @Shadow
+    @Final
     Object2IntOpenHashMap<SpawnGroup> groupToCount;
 
-    @Shadow @Final private int spawningChunkCount;
+    @Shadow
+    @Final
+    private int spawningChunkCount;
     private PlayerEntity closestPlayer;
 
     @Override
