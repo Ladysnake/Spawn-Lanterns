@@ -4,7 +4,6 @@ import ladysnake.spawnlanterns.common.SpawnLanterns;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.Angerable;
-import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.passive.TameableEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -18,11 +17,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PlayerEntity.class)
 public abstract class PlayerEntityMixin extends LivingEntity {
-    @Shadow public abstract boolean isCreative();
-
     protected PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
+
+    @Shadow
+    public abstract boolean isCreative();
 
     @Inject(at = @At("RETURN"), method = "tick")
     public void tick(CallbackInfo ci) {
