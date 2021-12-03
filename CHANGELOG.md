@@ -1,5 +1,8 @@
 # Spawn Lanterns - Changelog:
 
+### Spawn Lanterns 1.0.3 - 1.18
+- Fixed the mod crashing upon loading a world
+
 ### Spawn Lanterns 1.0.2 - 1.18
 - Updated to Minecraft 1.18
 

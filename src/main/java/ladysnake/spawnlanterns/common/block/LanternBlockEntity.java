@@ -26,11 +26,11 @@ public abstract class LanternBlockEntity extends BlockWithEntity implements Wate
 
     public LanternBlockEntity(AbstractBlock.Settings settings) {
         super(settings);
-        this.setDefaultState((BlockState) ((BlockState) ((BlockState) this.stateManager.getDefaultState()).with(HANGING, false)).with(WATERLOGGED, false));
+        this.setDefaultState(this.stateManager.getDefaultState().with(HANGING, false).with(WATERLOGGED, false));
     }
 
     protected static Direction attachedDirection(BlockState state) {
-        return state.get(HANGING) != false ? Direction.DOWN : Direction.UP;
+        return state.get(HANGING) ? Direction.DOWN : Direction.UP;
     }
 
     @Override
@@ -39,16 +39,16 @@ public abstract class LanternBlockEntity extends BlockWithEntity implements Wate
         FluidState fluidState = ctx.getWorld().getFluidState(ctx.getBlockPos());
         for (Direction direction : ctx.getPlacementDirections()) {
             BlockState blockState;
-            if (direction.getAxis() != Direction.Axis.Y || !(blockState = (BlockState) this.getDefaultState().with(HANGING, direction == Direction.UP)).canPlaceAt(ctx.getWorld(), ctx.getBlockPos()))
+            if (direction.getAxis() != Direction.Axis.Y || !(blockState = this.getDefaultState().with(HANGING, direction == Direction.UP)).canPlaceAt(ctx.getWorld(), ctx.getBlockPos()))
                 continue;
-            return (BlockState) blockState.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
+            return blockState.with(WATERLOGGED, fluidState.getFluid() == Fluids.WATER);
         }
         return null;
     }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return state.get(HANGING) != false ? HANGING_SHAPE : STANDING_SHAPE;
+        return state.get(HANGING) ? HANGING_SHAPE : STANDING_SHAPE;
     }
 
     @Override
@@ -69,7 +69,7 @@ public abstract class LanternBlockEntity extends BlockWithEntity implements Wate
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED).booleanValue()) {
+        if (state.get(WATERLOGGED)) {
             world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         if (LanternBlockEntity.attachedDirection(state).getOpposite() == direction && !state.canPlaceAt(world, pos)) {
@@ -80,7 +80,7 @@ public abstract class LanternBlockEntity extends BlockWithEntity implements Wate
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if (state.get(WATERLOGGED).booleanValue()) {
+        if (state.get(WATERLOGGED)) {
             return Fluids.WATER.getStill(false);
         }
         return super.getFluidState(state);

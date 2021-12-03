@@ -11,7 +11,7 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/spawnlanterns",
     "sources": "https://github.com/Ladysnake/Spawn-Lanterns"
   },
-  "license": "CC-BY-NC-SA 4.0",
+  "license": "Code: GNU GPLv3; Art: ARR",
   "icon": "assets/spawnlanterns/icon.png",
   "environment": "*",
   "entrypoints": {
