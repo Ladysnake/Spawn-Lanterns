@@ -90,5 +90,11 @@ public abstract class LanternBlockEntity extends BlockWithEntity implements Wate
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
+    
+    @Override
+	public BlockRenderType getRenderType(BlockState state)
+	{
+		return BlockRenderType.MODEL;
+	}
 }
 
